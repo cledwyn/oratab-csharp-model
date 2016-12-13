@@ -1,12 +1,13 @@
 --SET SERVEROUTPUT ON;
--- Created on 28-Aug-12 by CLEDWYN 
+-- Created on 28-Aug-12 by Lloyd CLEDWYN Lentz
+-- Update 12-Dec-16 - LL
 declare 
   -- Local variables here
-  v_dtype varchar2(200);
-  v_default varchar2(200);
-  v_table_name varchar2(80) := 'PROSPECT_EXTRACT';
-  v_string varchar2(20000);
-  v_username varchar2(100);
+  v_dtype        varchar2(200);
+  v_default      varchar2(200);
+  v_schema       varchar2(32) := 'ADVCS';
+  v_table_name   varchar2(32) := 'GIFT_LOADER_DATA';
+  v_string       varchar2(20000);
   
   cursor acur is
   select * 
@@ -17,7 +18,7 @@ declare
 begin
   -- Test statements here
   
-  select lower(user) into v_username from dual;
+  --select lower(user) into v_username from dual;
 
   for arow in acur loop
     select decode(arow.data_type,
@@ -43,7 +44,7 @@ begin
 
 
 dbms_output.put_line('public ' || v_table_name || '(string idNumber)
-    { OracleRS.Command cmd = new OracleRS.Command("select * from advance.' || v_table_name || ' where id_number = :id_number", "' || v_username || '", CommandType.Text);
+    { OracleRS.Command cmd = new OracleRS.Command("select * from ' || v_schema || '.' || v_table_name || ' where id_number = :id_number", "' || v_schema || '", CommandType.Text);
       cmd.AddParameterWithValue(":id_number", idNumber);
       foreach (DataRow row in cmd.GetDataTable(false).Rows)
       {');
@@ -87,14 +88,13 @@ dbms_output.put_line('public ' || v_table_name || '(string idNumber)
   
   v_string := v_string || ' where ID = :ID"; ';
   dbms_output.put_line(v_string);
-  dbms_output.put_line('OracleRS.Command cmd = new OracleRS.Command(sql, "' || v_username || '", CommandType.Text);');
+  dbms_output.put_line('OracleRS.Command cmd = new OracleRS.Command(sql, "' || v_schema || '", CommandType.Text);');
   for arow in acur loop
     dbms_output.put_line('cmd.AddParameterWithValue(":'  || arow.column_name || '", '  || arow.column_name);
   end loop;
   dbms_output.put_line('cmd.AddParameterWithValue(":ID", ID);');
   dbms_output.put_line('cmd.ExecuteNonQuery();');
   dbms_output.put_line('}');
-                
-
 
 end;
+/
