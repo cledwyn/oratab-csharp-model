@@ -90,7 +90,7 @@ dbms_output.put_line('public ' || v_table_name || '(string idNumber)
   dbms_output.put_line(v_string);
   dbms_output.put_line('OracleRS.Command cmd = new OracleRS.Command(sql, "' || v_schema || '", CommandType.Text);');
   for arow in acur loop
-    dbms_output.put_line('cmd.AddParameterWithValue(":'  || arow.column_name || '", '  || arow.column_name);
+    dbms_output.put_line('cmd.AddParameterWithValue(":'  || arow.column_name || '", '  || arow.column_name || ');');
   end loop;
   dbms_output.put_line('cmd.AddParameterWithValue(":ID", ID);');
   dbms_output.put_line('cmd.ExecuteNonQuery();');
